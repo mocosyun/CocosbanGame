@@ -4,7 +4,7 @@ var ThirdLayer = cc.Layer.extend({
         this._super();
         var size = cc.director.getWinSize();
 
-        var label = cc.LabelTTF.create("GAME OVER", "Arial", 40);
+        var label = cc.LabelTTF.create("STAGE　CLEAR！", "Arial", 40);
         label.setPosition(size.width / 2, size.height * 4 / 5);
         this.addChild(label, 1);
 
@@ -22,7 +22,17 @@ var ThirdLayer = cc.Layer.extend({
     },
     onTouchMoved: function(touch, event) {},
     onTouchEnded: function(touch, event) {
-      cc.director.runScene(new GameScene());
+      flg = 0;
+      cc.director.runScene(new gameScene());
+      /*level = [
+        [1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 0, 0, 0, 0, 1],
+        [1, 1, 3, 3, 2, 0, 1],
+        [1, 0, 0, 4, 0, 0, 1],
+        [1, 0, 0, 1, 0, 2, 1],
+        [1, 0, 0, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1]
+      ];*/
     },
 });
 
