@@ -55,6 +55,11 @@ var gameLayer = cc.Layer.extend({
     levelSprite.setScale(5);
     this.addChild(levelSprite);
 
+    var reset_png = new retry();
+    reset_png.setPosition(70, 100);
+    reset_png.setScale(0.5);
+    this.addChild(reset_png);
+
     for (i = 0; i < 7; i++) {　　　　　　
       cratesArray[i] = [];　 //配列オブジェクトの生成
       for (j = 0; j < 7; j++) {
@@ -89,18 +94,49 @@ var gameLayer = cc.Layer.extend({
     cc.eventManager.addListener(listener, this);
   },
 });
-
+var retry = cc.Sprite.extend({
+    ctor:function() {
+        this._super();
+        this.initWithFile(res.reset_png);
+        cc.eventManager.addListener(listener2.clone(), this);
+    }
+});
+var listener2 = cc.EventListener.create({
+    event: cc.EventListener.TOUCH_ONE_BY_ONE,
+    swallowTouches: true,
+    onTouchBegan: function (touch, event) {
+            var target = event.getCurrentTarget();
+            var location = target.convertToNodeSpace(touch.getLocation());
+            var targetSize = target.getContentSize();
+            var targetRectangle = cc.rect(0, 0, targetSize.width, targetSize.height);
+            if (cc.rectContainsPoint(targetRectangle, location)) {
+              level = [
+                [1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 0, 0, 0, 0, 1],
+                [1, 0, 3, 0, 2, 0, 1],
+                [1, 0, 0, 4, 0, 0, 1],
+                [1, 0, 3, 0, 2, 0, 1],
+                [1, 0, 0, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 1, 1]
+              ];
+              cflag = 0;
+              gameflag = 0;
+              cc.director.runScene(new gameScene());
+              console.log("やり直し");
+            }
+    }
+});
 var listener = cc.EventListener.create({
-event: cc.EventListener.TOUCH_ONE_BY_ONE,
-swallowTouches: true,
-onTouchBegan:function (touch,event) {
-startTouch = touch.getLocation();
-return true;
-},
-onTouchEnded:function(touch, event){
-endTouch = touch.getLocation();
-swipeDirection();
-}
+  event: cc.EventListener.TOUCH_ONE_BY_ONE,
+  swallowTouches: true,
+  onTouchBegan:function (touch,event) {
+    startTouch = touch.getLocation();
+    return true;
+  },
+  onTouchEnded:function(touch, event){
+    endTouch = touch.getLocation();
+    swipeDirection();
+  }
 });
 //スワイプ方向を検出する処理
 function swipeDirection(){
@@ -139,7 +175,7 @@ function swipeDirection(){
 }
 
 function move(deltaX,deltaY){
-switch(level[playerPosition.y+deltaY][playerPosition.x+deltaX]){
+  switch(level[playerPosition.y+deltaY][playerPosition.x+deltaX]){
     case 0:
     case 2:
         level[playerPosition.y][playerPosition.x]-=4;
@@ -174,15 +210,15 @@ switch(level[playerPosition.y+deltaY][playerPosition.x+deltaX]){
       restartGame();
       //1秒待ってシーン遷移
       setTimeout(function(){
-      cc.director.runScene(new GameOverScene());
-    },1000);
+        cc.director.runScene(new GameOverScene());
+      },1000);
     }
-}
+  }
 
 function restartGame() {
-  console.log("戻れ");
+  //console.log("戻れ");
   cc.director.runScene(new gameScene());
-  level = [
+  /*level = [
     [1, 1, 1, 1, 1, 1, 1],
     [1, 1, 0, 0, 0, 0, 1],
     [1, 1, 3, 0, 2, 0, 1],
@@ -190,6 +226,6 @@ function restartGame() {
     [1, 0, 3, 1, 2, 0, 1],
     [1, 0, 0, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1]
-  ];
+  ];*/
 
 }
